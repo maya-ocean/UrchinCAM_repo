@@ -6,6 +6,11 @@ import os
 import signal
 import sys
 
+# USB mount point
+MOUNT_POINT = "/mnt/usb"
+SESSION_FOLDER = os.path.join(MOUNT_POINT, "UrchinPOD")
+LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
+    
 # Create log file on Raspberry Pi to track progress and errors.
 def log(message):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
@@ -14,12 +19,17 @@ def log(message):
     with open (LOG_FILE, "a") as f:
         f.write (formatted + "\n")
 
-# Create folder for recordings and log
-SESSION_FOLDER = "/mnt/usb/UrchinPOD"
-os.makedirs(SESSION_FOLDER, exist_ok=True)
+# Check if USB is mounted.
+def is_mounted():
+    return os.path.ismount(MOUNT_POINT)
 
-# Log file path
-LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
+# Exit if USB is not mounted
+if not is_mounted():
+    log ("USB is not mounted. Exiting.")
+    exit(1)
+         
+# Create folder for recordings and log
+os.makedirs(SESSION_FOLDER, exist_ok=True)
 
 # Set duration of recording for a single on cycle
 DURATION_MINS = 27
@@ -29,7 +39,6 @@ should_exit = False
 
 def signal_handler (sig, frame):
     global should_exit
-    print ("[!] Received interrupt signal. Preparing to exit gracefully...")
     log ("[!] Received interrupt signal. Preparing to exit gracefully...")
     should_exit = True
 
@@ -44,16 +53,15 @@ def start_camera_recording(duration_secs):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     h264_file = os.path.join(SESSION_FOLDER, f"video_{timestamp}.h264")
 
-    print(f"[{timestamp}] Recording for {duration_secs} seconds → {h264_file}")
     log (f"Recording for {duration_secs} seconds → {h264_file}")
    
     command = [
         "libcamera-vid",
         "-t", str(duration_secs * 1000),
         "-o", h264_file,
-        "--width", WIDTH,
-        "--height", HEIGHT,
-        "--framerate", FRAME_RATE,
+        "--width", str(WIDTH),
+        "--height", str(HEIGHT),
+        "--framerate", str(FRAME_RATE),
         "--bitrate", str(BITRATE_Mbps * 1000000),
         "--inline",
         "--nopreview"
@@ -63,9 +71,6 @@ def start_camera_recording(duration_secs):
         subprocess.run(command, check=True)
         
     except subprocess.CalledProcessError as e:
-        print (f"[{timestamp}] ERROR: Failed to record video.")
-        print (f"[{timestamp}] Command:", e.cmd)
-        print (f"[{timestamp}] Exit code:", e.returncode)
         log ("ERROR: Failed to record video.")
         log (f"Command: {e.cmd}")
         log (f"Exit code: {e.returncode}")
@@ -74,7 +79,6 @@ def start_camera_recording(duration_secs):
 def half_hour_cycle():  
     duration_secs = DURATION_MINS * 60   
     start_camera_recording(duration_secs)
-    print (f"[{datetime.now().strftime('%H:%M:%S')}] Video recorded.")
     log (f"[{datetime.now().strftime('%H:%M:%S')}] Video recorded.")
     time.sleep(10)
 
