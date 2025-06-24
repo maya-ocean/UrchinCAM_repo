@@ -13,7 +13,7 @@ LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
     
 # Create log file on Raspberry Pi to track progress and errors.
 def log(message):
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     formatted = f"[{timestamp}] {message}"
     print (formatted)
     with open (LOG_FILE, "a") as f:
@@ -50,7 +50,7 @@ def start_camera_recording(duration_secs):
     WIDTH = 1280
     HEIGHT = 720
     BITRATE_Mbps = 3
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     h264_file = os.path.join(SESSION_FOLDER, f"video_{timestamp}.h264")
 
     log (f"Recording for {duration_secs} seconds → {h264_file}")
@@ -79,7 +79,7 @@ def start_camera_recording(duration_secs):
 def half_hour_cycle():  
     duration_secs = DURATION_MINS * 60   
     start_camera_recording(duration_secs)
-    log (f"[{datetime.now().strftime('%H:%M:%S')}] Video recorded.")
+    log (f"[{datetime.now().strftime('%H-%M-%S')}] Video recorded.")
     time.sleep(10)
 
 # Start the scheduler
