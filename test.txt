@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/pi/UrchinPOD_repo/urchincam_single_cycle.py", line 82, in <module>
+    half_hour_cycle ()
+  File "/home/pi/UrchinPOD_repo/urchincam_single_cycle.py", line 76, in half_hour_cycle
+    start_camera_recording(duration_secs)
+  File "/home/pi/UrchinPOD_repo/urchincam_single_cycle.py", line 63, in start_camera_recording
+    subprocess.run(command, check=True)
+  File "/usr/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/usr/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.9/subprocess.py", line 1756, in _execute_child
+    self.pid = _posixsubprocess.fork_exec(
+TypeError: expected str, bytes or os.PathLike object, not int

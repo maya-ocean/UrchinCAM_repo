@@ -6,15 +6,13 @@ import os
 import signal
 import sys
 
-# Check that USB is mounted. 
-import os
-def is_mounted (mount_point = "/mnt/usb"):
-    return os.path.ismount (mount_point)
-    
-if not is_mounted ():
-    print ("USB drive not mounted. Exiting.")
-    log ("USB drive not mounted. Exiting.")
-    exit (1)
+# Create log file on Raspberry Pi to track progress and errors.
+def log(message):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    formatted = f"[{timestamp}] {message}"
+    print (formatted)
+    with open (LOG_FILE, "a") as f:
+        f.write (formatted + "\n")
 
 # Create folder for recordings and log
 SESSION_FOLDER = "/mnt/usb/UrchinPOD"
@@ -26,15 +24,8 @@ LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
 # Set duration of recording for a single on cycle
 DURATION_MINS = 27
 
-# Graceful exit flag
+# Graceful exit flag and error handling.
 should_exit = False
-
-def log(message):
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    formatted = f"[{timestamp}] {message}"
-    print (formatted)
-    with open (LOG_FILE, "a") as f:
-        f.write (formatted + "\n")
 
 def signal_handler (sig, frame):
     global should_exit
