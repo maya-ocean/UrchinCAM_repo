@@ -6,10 +6,19 @@ import os
 import signal
 import sys
 
-# Create folder for recordings and log
-SESSION_FOLDER = "UrchinPOD"
-os.makedirs(SESSION_FOLDER, exist_ok=True)
+# Check that USB is mounted. 
+import os
+def is_mounted (mount_point = "/mnt/usb"):
+    return os.path.ismount (mount_point)
+    
+if not is_mounted ():
+    print ("USB drive not mounted. Exiting.")
+    log ("USB drive not mounted. Exiting.")
+    exit (1)
 
+# Create folder for recordings and log
+SESSION_FOLDER = "/mnt/usb/UrchinPOD"
+os.makedirs(SESSION_FOLDER, exist_ok=True)
 
 # Log file path
 LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
@@ -37,34 +46,30 @@ signal.signal (signal.SIGINT, signal_handler)
 
 # Start camera recording for given duration in seconds
 def start_camera_recording(duration_secs):
+    FRAME_RATE = 30
+    WIDTH = 1280
+    HEIGHT = 720
+    BITRATE_Mbps = 3
     timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     h264_file = os.path.join(SESSION_FOLDER, f"video_{timestamp}.h264")
-    mp4_file = os.path.join(SESSION_FOLDER, f"video_{timestamp}.mp4")
 
-    print(f"[{timestamp}] Recording for {duration_secs} seconds → {mp4_file}")
-    log (f"Recording for {duration_secs} seconds → {mp4_file}")
+    print(f"[{timestamp}] Recording for {duration_secs} seconds → {h264_file}")
+    log (f"Recording for {duration_secs} seconds → {h264_file}")
    
     command = [
         "libcamera-vid",
         "-t", str(duration_secs * 1000),
         "-o", h264_file,
+        "--width", WIDTH,
+        "--height", HEIGHT,
+        "--framerate", FRAME_RATE,
+        "--bitrate", str(BITRATE_Mbps * 1000000),
         "--inline",
         "--nopreview"
     ]
 
     try:
         subprocess.run(command, check=True)
-        
-        # Convert to mp4.
-        convert_command = [
-            "ffmpeg", "-y",
-            "-framerate", "30",
-            "-i", h264_file,
-            "-c", "copy",
-            mp4_file
-        ]
-        subprocess.run (convert_command, check = True)
-        os.remove (h264_file)
         
     except subprocess.CalledProcessError as e:
         print (f"[{timestamp}] ERROR: Failed to record video.")
