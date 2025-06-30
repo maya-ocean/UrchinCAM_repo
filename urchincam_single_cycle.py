@@ -5,6 +5,7 @@ import subprocess
 import os
 import signal
 import sys
+import psutil
 
 # USB mount point
 MOUNT_POINT = "/mnt/usb"
@@ -75,12 +76,34 @@ def start_camera_recording(duration_secs):
         log (f"Command: {e.cmd}")
         log (f"Exit code: {e.returncode}")
 
+# Function to kill stuck camera processes (libcamera-vid) at the end
+def kill_stuck_camera_processes():
+    camera_processes = ["libcamera-vid"]
+    killed = False
+    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            if any(
+                cam_proc in (proc.info['name'] or '') or
+                any(cam_proc in (cmd or '') for cmd in (proc.info['cmdline'] or []))
+                for cam_proc in camera_processes):
+                if proc.pid != os.getpid():
+                    proc.terminate()
+                    log(f"Killed stuck process: {proc.info['name']} (PID {proc.pid})")
+                    killed = True
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    if not killed:
+        log("No stuck camera processes found.")
+
 # Main loop
 def half_hour_cycle():  
     duration_secs = DURATION_MINS * 60   
     start_camera_recording(duration_secs)
-    log (f"[{datetime.now().strftime('%H-%M-%S')}] Video recorded.")
+    log ("Video recorded.")
     time.sleep(10)
 
 # Start the scheduler
 half_hour_cycle ()
+
+# At the very end, clean up any stuck camera processes
+kill_stuck_camera_processes()
