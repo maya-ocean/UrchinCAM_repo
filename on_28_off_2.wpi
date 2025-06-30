@@ -1,0 +1,6 @@
+# Turns on the Raspberry Pi every half-hour and shuts down 28 minutes later. 
+
+BEGIN 2015-08-01 00:00:00
+END   2025-07-31 23:59:59
+ON    M28 # On for 28 minutes.
+OFF   M2 # Off for 2 minutes. 
