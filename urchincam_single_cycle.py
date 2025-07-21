@@ -66,6 +66,9 @@ def mount_usb():
     try:
         subprocess.run(mount_cmd, check=True)
         log(f"Mounted {device} to {mount_point}")
+
+        subprocess.run(["sudo", "chown", "-R", "pi:pi", mount_point], check = True)
+    
     except subprocess.CalledProcessError as e:
         log(f"ERROR: Failed to mount {device} to {mount_point}: {e}")
         return False
