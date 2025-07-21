@@ -35,7 +35,7 @@ signal.signal(signal.SIGINT, signal_handler)
 # Mount USB function
 def mount_usb():
     usb_id_file = "/home/pi/gphoto2/usb_id.txt"
-    mount_point = "/media/DATA"
+    mount_point = "/mnt/DATA"
     default_device = "sda1"
     user = "pi"
     group = "pi"
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     mounted = mount_usb()
     # Set session/log paths to USB only if mount succeeded
     if mounted:
-        SESSION_FOLDER = "/media/DATA/UrchinPOD"
+        SESSION_FOLDER = "/mnt/DATA/UrchinPOD"
         LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
     else:
         # Fallback to local storage if mount fails
