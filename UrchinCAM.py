@@ -148,11 +148,11 @@ if __name__ == "__main__":
     mounted = mount_usb()
     # Set session/log paths to USB only if mount succeeded
     if mounted:
-        SESSION_FOLDER = "/mnt/DATA/UrchinPOD"
+        SESSION_FOLDER = "/mnt/DATA/UrchinCAM"
         LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
     else:
         # Fallback to local storage if mount fails
-        SESSION_FOLDER = "UrchinPOD"
+        SESSION_FOLDER = "UrchinCAM"
         LOG_FILE = os.path.join(SESSION_FOLDER, "urchin_log.txt")
         log("[!] WARNING: USB not mounted, saving to local SD card.")
 
