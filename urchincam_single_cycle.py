@@ -34,7 +34,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Mount USB function
 def mount_usb():
-    usb_id_file = "/home/pi/gphoto2/usb_id.txt"
+    usb_id_file = "/home/pi/usb_id.txt"
     mount_point = "/mnt/DATA"
     default_device = "sda1"
     user = "pi"
