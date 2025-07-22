@@ -136,7 +136,7 @@ def kill_stuck_camera_processes():
 
 # Run the recording cycle
 def half_hour_cycle():
-    DURATION_MINS = 27
+    DURATION_MINS = 26
     duration_secs = DURATION_MINS * 60
     start_camera_recording(duration_secs)
     log("Video recorded.")
