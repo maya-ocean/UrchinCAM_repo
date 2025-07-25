@@ -4,6 +4,7 @@
 if ! mount | grep -q "/media/pi/URCHIN2"; then
     # Mount drive if not mounted.
     sudo mkdir -p /media/pi/URCHIN2
+    # The below line will only work if the drive is read by the pi as sda1. Make sure to only have one drive in the pi at a time.
     sudo mount /dev/sda1 /media/pi/URCHIN2
 fi
 
