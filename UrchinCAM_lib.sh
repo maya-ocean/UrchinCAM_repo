@@ -1,3 +1,11 @@
 #!/bin/bash
-sudo mount /dev/sda1 /media/pi/URCHIN2
+
+# Check if drive is mounted. 
+if ! mount | grep -q "/media/pi/URCHIN2"; then
+    # Mount drive if not mounted.
+    sudo mkdir -p /media/pi/URCHIN2
+    sudo mount /dev/sda1 /media/pi/URCHIN2
+fi
+
+# Record 5 minutes of video. 
 libcamera-vid -t 300000 -o "/media/pi/URCHIN2/video_$(date +%Y%m%d_%H%M%S).mp4" --width 1280 --height 720 --bitrate 3000000 --inline --nopreview
