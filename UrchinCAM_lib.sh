@@ -12,7 +12,7 @@ for (( i=0; i<5; i++ )); do
 echo "$i"
 # Record 5 minute video segment. 
 libcamera-vid -t 300000 -o "/media/pi/URCHIN2/video_$(date +%Y%m%d_%H%M%S).h264" --width 1280 --height 720 --bitrate 3000000 --inline --nopreview
-sleep 10
+sleep 5
 done
 
 # To run this script, navigate to its folder. 
