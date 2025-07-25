@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Log output
+exec > /home/pi/Urchin_log.txt 2>&1
+
+# Check if drive exists
+if [ ! -e /dev/sda1 ]; then
+    echo "/dev/sda1 not found. Exiting."
+    exit 1
+fi
+
 # Check if drive is mounted. 
 if ! mount | grep -q "/media/pi/URCHIN2"; then
     # Mount drive if not mounted.
