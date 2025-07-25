@@ -7,10 +7,17 @@ if ! mount | grep -q "/media/pi/URCHIN2"; then
     sudo mount /dev/sda1 /media/pi/URCHIN2
 fi
 
-# Record 5 minutes of video. 
+# Runs video recording in a loop 5 times.
+for (( i=0; i<5; i++ )); do
+echo "$i"
+# Record 5 minute video segment. 
 libcamera-vid -t 300000 -o "/media/pi/URCHIN2/video_$(date +%Y%m%d_%H%M%S).h264" --width 1280 --height 720 --bitrate 3000000 --inline --nopreview
+done
 
-
-# To run this script, navigate to its folder.
+# To run this script, navigate to its folder. 
 # sudo chmod +x UrchinCAM_lib.sh
 # sudo ./UrchinCAM_lib.sh
+
+
+
+
