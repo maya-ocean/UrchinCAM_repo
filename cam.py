@@ -4,7 +4,7 @@ from picamera2 import Picamera2
 
 TOTAL_HOURS = 1
 SEGMENT_MINS = 10
-thismany = (TOTAL_HOURS * 60) / SEGMENT_MINS
+thismany = int((TOTAL_HOURS * 60) / SEGMENT_MINS)
 
 cam = Picamera2()
 
