@@ -14,7 +14,7 @@ for i in range(thismany):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     try:
-        cam.start_and_record_video(f"{timestamp}.mp4", duration=6*60)
+        cam.start_and_record_video(f"{timestamp}.mp4", duration=int(SEGMENT_MINS*60), bitrate=5000000)
 
     except KeyboardInterrupt:
         break
