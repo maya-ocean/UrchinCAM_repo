@@ -23,10 +23,12 @@ echo "$i"
 # Record 5 minute video segment. 
 libcamera-vid -t 300000 -o "/media/pi/URCHIN2/video_$(date +%Y%m%d_%H%M%S).h264" --width 1280 --height 720 --bitrate 3000000 --inline --nopreview
 sleep 10
+done
+
+# After loop has completed, unmount the USB drive. 
 lsblk
 sync
 sudo umount /media/pi/URCHIN2
-done
 
 # To run this script, navigate to its folder. 
 # sudo chmod +x UrchinCAM_lib.sh
