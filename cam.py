@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 from picamera2 import Picamera2
 
-TOTAL_HOURS = 1
+TOTAL_HOURS = 72
 SEGMENT_MINS = 10
 thismany = int((TOTAL_HOURS * 60) / SEGMENT_MINS)
 
